@@ -1,2 +1,4 @@
 # Fishing Recommendation Dashboard
 - A Streamlit dashboard that integrates weather, barometric pressure, and Georgia DNR trout stocking data to recommend optimal fishing locations and times in North Georgia.
+
+- Open Meteo for weather data API: https://open-meteo.com/
