@@ -1,6 +1,7 @@
 # app.py
 import streamlit as st
 import pandas as pd
+import altair as alt
 import requests
 
 def fetch_weather(lat, lon):
@@ -42,7 +43,7 @@ def fetch_weather(lat, lon):
         "precipitation": hourly["precipitation"],
         "pressure": hourly["surface_pressure"]
     })
-
+    
     return df
 
 # Page configuration
@@ -94,6 +95,31 @@ st.dataframe(weather_df)
 
 st.subheader("Charts")
 st.write("Charts will appear here.")
+
+weather_df["time"] = pd.to_datetime(weather_df["time"])
+
+temp_chart = (
+    alt.Chart(weather_df)
+    .mark_line(point=True)
+    .encode(
+        x=alt.X("time:T", title="Time"),
+        y=alt.Y("temperature_f:Q", title="Temperature (°F)"),
+        tooltip=[
+            alt.Tooltip("time:T", title="Time"),
+            alt.Tooltip("temperature_f:Q", title="Temp (°F)", format=".1f"),
+            alt.Tooltip("precipitation:Q", title="Precipitation", format=".2f"),
+            alt.Tooltip("pressure:Q", title="Pressure", format=".1f"),
+        ],
+    )
+    .properties(
+        width="container",
+        height=400,
+        title="Temperature Over Time"
+    )
+    .interactive()
+)
+
+st.altair_chart(temp_chart, use_container_width=True)
 
 if show_details:
     st.subheader("Details")
