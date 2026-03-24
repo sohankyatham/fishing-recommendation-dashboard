@@ -4,23 +4,8 @@ import pandas as pd
 import altair as alt
 import requests
 
+# Get hourly weather data from Open-Meteo API & return as a DataFrame
 def fetch_weather(lat, lon):
-    """
-    Fetch hourly weather data from Open-Meteo.
-
-    Parameters
-    ----------
-    lat : float
-        Latitude of location
-    lon : float
-        Longitude of location
-
-    Returns
-    -------
-    pandas.DataFrame
-        DataFrame containing hourly forecast data
-    """
-
     url = "https://api.open-meteo.com/v1/forecast"
 
     params = {
@@ -39,7 +24,7 @@ def fetch_weather(lat, lon):
 
     df = pd.DataFrame({
         "time": hourly["time"],
-        "temperature_f": [(t * 9/5) + 32 for t in hourly["temperature_2m"]],
+        "temperature_f": [(t * 9/5) + 32 for t in hourly["temperature_2m"]], # Convert Celsius to Fahrenheit
         "precipitation": hourly["precipitation"],
         "pressure": hourly["surface_pressure"]
     })
