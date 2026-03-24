@@ -15,20 +15,6 @@
 - Geocoding - converting a place name or address into lat/lon coordinates.
 
 
-
-fishing-app/
-│
-├── app.py                  ← Landing page / main recommendation
-│
-├── pages/
-│   ├── 1_📊_Analysis.py    ← All the charts (temp, pressure, precipitation)
-│   ├── 2_🗺️_Spot_Ranker.py ← Compare all spots side by side
-│   └── 3_📋_Stocking.py    ← This week's DNR stocking report table
-│
-├── data/
-│   ├── weather.py          ← fetch_weather()
-│   ├── stocking.py         ← fetch_stocking_data()
-│   └── spots.py            ← spots dict + geocoding logic
-│
-└── analysis/
-    └── scoring.py          ← score_conditions(), score_hour()
+https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf
+https://georgiawildlife.com/fishing-forecasts
+https://experience.arcgis.com/experience/11c6bed44d654207bd11c926f3d6fcbc
