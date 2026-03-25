@@ -9,14 +9,15 @@ def score_hour(row):
     # else: temperature is not ideal, dont add any points
 
     # Pressure trend (30 points max)
-    # Fish are more active when the pressure is rising because fish feed more
-    # So pressure_change should be positive which means it's rising
-    if row["pressure_change"] > 0.5:
-        score += 30
-    elif row["pressure_change"] > 0:
-        score += 15
-    elif row["pressure_change"] < -1:
-        score -= 10  # actively falling pressure, fish are less active 
+    # Dropping pressure means fish feed aggressively 
+    if row["pressure_change"] < -0.5:
+        score += 30      
+    elif row["pressure_change"] < 0:
+        score += 15      
+    elif -0.3 <= row["pressure_change"] <= 0.3:
+        score += 10      
+    elif row["pressure_change"] > 1: # Pressure rising means less feeding activity
+        score -= 10      
 
     # Time of day (20 points max) - dawn and dusk are the best times to fish
     hour = row["time"].hour  # extract the hour number (0-23) from datetime
