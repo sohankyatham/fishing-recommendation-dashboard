@@ -2,10 +2,12 @@ def score_hour(row):
     score = 0
 
     # Temperature (35 points max)
-    if 50 <= row["temperature_f"] <= 65:
+    if 52 <= row["temperature_f"] <= 64:
         score += 35
-    elif 45 <= row["temperature_f"] <= 70:
-        score += 15
+    elif 45 <= row["temperature_f"] <= 68:
+        score += 25
+    elif row["temperature_f"] > 70: # trout stressed over 70 degrees F
+        score -= 15
     # else: temperature is not ideal, dont add any points
 
     # Pressure trend (30 points max)

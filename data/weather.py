@@ -1,11 +1,8 @@
 import requests
 import pandas as pd
 
+# Fetch the hourly weather forecast from Open-Meteo API - returns pandas df with 1 row per hour
 def fetch_weather(lat, lon):
-    """
-    Fetch hourly weather forecast from Open-Meteo API.
-    Returns a pandas DataFrame with one row per hour.
-    """
     url = "https://api.open-meteo.com/v1/forecast"
 
     params = {
@@ -27,8 +24,7 @@ def fetch_weather(lat, lon):
         "pressure": hourly["surface_pressure"]
     })
 
-    # Derived column: how much did pressure change from the previous hour?
-    # .diff() subtracts each row from the one before it
+    # Pressure change from the previous hour, diff subtracts row from previous row
     df["pressure_change"] = df["pressure"].diff()
 
     return df
