@@ -29,7 +29,6 @@ def fetch_weather(lat, lon):
 
     # Derived column: how much did pressure change from the previous hour?
     # .diff() subtracts each row from the one before it
-    # This is your first "feature engineering" — creating new info from existing data
     df["pressure_change"] = df["pressure"].diff()
 
     return df
