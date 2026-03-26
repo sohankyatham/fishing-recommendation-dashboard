@@ -4,7 +4,7 @@ import pdfplumber
 import pandas as pd
 import io
 
-@st.cache_data(ttl=3600)  # cache for 1 hour
+@st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
 # Fetch the weekly trout stocking report from Georgia DNR.
 def fetch_stocking_data():
     url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf"

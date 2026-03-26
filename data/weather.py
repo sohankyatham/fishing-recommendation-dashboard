@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 
-@st.cache_data(ttl=3600)  # cache for 1 hour
+@st.cache_data(ttl=1800)  # cache for 30 minutes
 # Fetch the hourly weather forecast from Open-Meteo API - returns pandas df with 1 row per hour
 def fetch_weather(lat, lon):
     url = "https://api.open-meteo.com/v1/forecast"
