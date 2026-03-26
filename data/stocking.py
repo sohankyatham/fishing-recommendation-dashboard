@@ -3,6 +3,7 @@ import requests
 import pdfplumber
 import pandas as pd
 import io
+import re
 
 @st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
 # Fetch the weekly trout stocking report from Georgia DNR.
@@ -40,3 +41,13 @@ def fetch_stocking_data():
     df = pd.DataFrame(rows)
     df["date"] = pd.to_datetime(df["date"])
     return df
+
+# Normalize names from Georgia DNR Report to improve matching
+def normalize_name(name):
+    if not name:
+        return ""
+
+    name = name.lower().strip()
+    name = re.sub(r"[^\w\s]", "", name)   # remove punctuation
+    name = re.sub(r"\s+", " ", name)      # collapse extra spaces
+    return name
