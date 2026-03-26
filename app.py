@@ -1,63 +1,76 @@
-# app.py
 import streamlit as st
-from data.weather import fetch_weather
-from data.spots import SPOTS
-from analysis.scoring import score_hour
-from analysis.ranker import rank_spots
-from data.stocking import fetch_stocking_data
-from ai.recommendation import generate_fishing_recommendation
+import google.generativeai as genai
 
-st.set_page_config(page_title="Fishing Conditions Dashboard", page_icon="🐠", layout="wide")
-st.title("🐠 Fishing Conditions Dashboard")
-st.set_page_config(layout="wide")
+st.title("Gemini Test")
 
-# Sidebar
-st.sidebar.header("Settings")
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-selected_spot = st.sidebar.selectbox("Choose a spot", list(SPOTS.keys()))
-st.session_state["selected_spot"] = selected_spot  # save for other pages
+if st.button("Test Gemini"):
+    with st.spinner("Calling Gemini..."):
+        response = model.generate_content("Say hello in one sentence.")
+        st.write(response.text)
 
-spot = SPOTS[selected_spot]
-lat, lon = spot["lat"], spot["lon"]
+# # app.py
+# import streamlit as st
+# from data.weather import fetch_weather
+# from data.spots import SPOTS
+# from analysis.scoring import score_hour
+# from analysis.ranker import rank_spots
+# from data.stocking import fetch_stocking_data
+# from ai.recommendation import generate_fishing_recommendation
 
-time_mode = st.sidebar.radio("Recommendation horizon", ["Today", "Next 3 days"])
-show_details = st.sidebar.toggle("Show details table", value=True)
+# st.set_page_config(page_title="Fishing Conditions Dashboard", page_icon="🐠", layout="wide")
+# st.title("🐠 Fishing Conditions Dashboard")
+# st.set_page_config(layout="wide")
 
-# Main area
-st.subheader("📍 Selected Spot")
-st.info(f"{selected_spot} | {lat}, {lon}")
+# # Sidebar
+# st.sidebar.header("Settings")
 
-weather_df = fetch_weather(lat, lon)
-weather_df["score"] = weather_df.apply(score_hour, axis=1)
+# selected_spot = st.sidebar.selectbox("Choose a spot", list(SPOTS.keys()))
+# st.session_state["selected_spot"] = selected_spot  # save for other pages
 
-with st.spinner("Analyzing fishing conditions..."):
-    ranked = rank_spots()
+# spot = SPOTS[selected_spot]
+# lat, lon = spot["lat"], spot["lon"]
 
-# Top recommendation card
-best = ranked.iloc[0]  # first row = highest scored spot
+# time_mode = st.sidebar.radio("Recommendation horizon", ["Today", "Next 3 days"])
+# show_details = st.sidebar.toggle("Show details table", value=True)
 
-st.subheader("AI Fishing Recommendation:")
-if st.button("Generate AI Recommendation"):
-    ai_text = generate_fishing_recommendation(best)
-    st.write(ai_text)
+# # Main area
+# st.subheader("📍 Selected Spot")
+# st.info(f"{selected_spot} | {lat}, {lon}")
 
-st.subheader("🎣 Best Spot Right Now")
-st.success(f"""
-**{best['spot']}**  
-Best time to go: {best['best_time']}  
-Conditions score: {best['best_score']}/100  
-Water temp: {best['temp_f']}°F  
-Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
-""")
+# weather_df = fetch_weather(lat, lon)
+# weather_df["score"] = weather_df.apply(score_hour, axis=1)
 
-# Full ranked table below
-st.subheader("🏆 All Spots Ranked")
-st.dataframe(ranked, use_container_width=True)
+# with st.spinner("Analyzing fishing conditions..."):
+#     ranked = rank_spots()
 
-stocking_df = fetch_stocking_data()
-st.subheader("🐟 This Week's Stocking Report")
-st.dataframe(stocking_df)
+# # Top recommendation card
+# best = ranked.iloc[0]  # first row = highest scored spot
 
-if show_details:
-    st.subheader("Raw Weather Data")
-    st.dataframe(weather_df)
+# st.subheader("AI Fishing Recommendation:")
+# if st.button("Generate AI Recommendation"):
+#     ai_text = generate_fishing_recommendation(best)
+#     st.write(ai_text)
+
+# st.subheader("🎣 Best Spot Right Now")
+# st.success(f"""
+# **{best['spot']}**  
+# Best time to go: {best['best_time']}  
+# Conditions score: {best['best_score']}/100  
+# Water temp: {best['temp_f']}°F  
+# Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
+# """)
+
+# # Full ranked table below
+# st.subheader("🏆 All Spots Ranked")
+# st.dataframe(ranked, use_container_width=True)
+
+# stocking_df = fetch_stocking_data()
+# st.subheader("🐟 This Week's Stocking Report")
+# st.dataframe(stocking_df)
+
+# if show_details:
+#     st.subheader("Raw Weather Data")
+#     st.dataframe(weather_df)
