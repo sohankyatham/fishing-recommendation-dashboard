@@ -62,3 +62,34 @@ def build_stocked_name_set(stocking_df):
         stocked_names.add(normalize_name(name))
 
     return stocked_names
+
+
+# Return stocking info for one spot and give full bonus for direct match, smaller bonus for related match
+def get_stocking_bonus_for_spot(spot_data, stocked_name_set):
+    direct_names = spot_data.get("stocking_names_direct", [])
+    related_names = spot_data.get("stocking_names_related", [])
+
+    # 1) direct match
+    for name in direct_names:
+        if normalize_name(name) in stocked_name_set:
+            return {
+                "stocking_bonus": 20,
+                "stocking_status": "Directly stocked",
+                "stocking_match": name
+            }
+
+    # 2) related match
+    for name in related_names:
+        if normalize_name(name) in stocked_name_set:
+            return {
+                "stocking_bonus": 8,
+                "stocking_status": "Related to stocked water",
+                "stocking_match": name
+            }
+
+    # 3) no match
+    return {
+        "stocking_bonus": 0,
+        "stocking_status": "No stocking match",
+        "stocking_match": None
+    }
