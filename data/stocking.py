@@ -1,9 +1,10 @@
-# data/stocking.py
+import streamlit as st
 import requests
 import pdfplumber
 import pandas as pd
 import io
 
+@st.cache_data(ttl=3600)  # cache for 1 hour
 # Fetch the weekly trout stocking report from Georgia DNR.
 def fetch_stocking_data():
     url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf"
