@@ -30,7 +30,8 @@ st.info(f"{selected_spot} | {lat}, {lon}")
 weather_df = fetch_weather(lat, lon)
 weather_df["score"] = weather_df.apply(score_hour, axis=1)
 
-ranked = rank_spots()
+with st.spinner("Analyzing fishing conditions..."):
+    ranked = rank_spots()
 
 # Top recommendation card
 best = ranked.iloc[0]  # first row = highest scored spot

@@ -4,7 +4,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 
 
-# Try Streamlit secrets first (cloud)
+# Try Streamlit secrets first (cloud + local)
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except:
@@ -14,8 +14,11 @@ except:
 
 genai.configure(api_key=api_key)
 
-model = genai.GenerativeModel("gemini-2.5-flash")
+@st.cache_resource
+def get_model():
+    return genai.GenerativeModel("gemini-2.5-flash")
 
+model = get_model()
 
 @st.cache_resource
 # Create a prompt based on the best spot data and get a fishing recommendation from the AI model
@@ -41,5 +44,9 @@ def generate_fishing_recommendation(best_spot_data):
     Keep the response concise.
     """
 
-    response = model.generate_content(prompt)
-    return response.text
+    # Add timeout protection and prevent infinite loading
+    try:
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        return "AI recommendation unavailable right now."
