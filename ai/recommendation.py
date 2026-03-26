@@ -17,6 +17,7 @@ genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 
+@st.cache_resource
 # Create a prompt based on the best spot data and get a fishing recommendation from the AI model
 def generate_fishing_recommendation(best_spot_data):
     prompt = f"""
