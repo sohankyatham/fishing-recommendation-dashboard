@@ -54,13 +54,11 @@ SPOTS = {
         "stocking_names_related": []
     },
 
-    # Personal spots
+    # Personal spots - for general fishing not trout so no stocking names
     "Mary Alice Park Beach": {
         "lat": 34.20176,
         "lon": -84.09908,
         "pdf_name": None,
-        "stocking_names_direct": [],
-        "stocking_names_related": []
     },
     "Traditions Neighborhood Lake)": {
         "lat": 34.156,
