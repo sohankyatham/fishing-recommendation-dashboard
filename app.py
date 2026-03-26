@@ -5,6 +5,7 @@ from data.spots import SPOTS
 from analysis.scoring import score_hour
 from analysis.ranker import rank_spots
 from data.stocking import fetch_stocking_data
+from ai.recommendation import generate_fishing_recommendation
 
 st.set_page_config(page_title="Fishing Conditions Dashboard", page_icon="🐠", layout="wide")
 st.title("🐠 Fishing Conditions Dashboard")
@@ -32,6 +33,10 @@ ranked = rank_spots()
 
 # Top recommendation card
 best = ranked.iloc[0]  # first row = highest scored spot
+ai_text = generate_fishing_recommendation(best)
+
+st.subheader("AI Fishing Recommendation:")
+st.info(ai_text)
 
 st.subheader("🎣 Best Spot Right Now")
 st.success(f"""
