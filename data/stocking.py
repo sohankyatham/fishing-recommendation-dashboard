@@ -42,6 +42,7 @@ def fetch_stocking_data():
     df["date"] = pd.to_datetime(df["date"])
     return df
 
+
 # Normalize names from Georgia DNR Report to improve matching
 def normalize_name(name):
     if not name:
@@ -51,3 +52,13 @@ def normalize_name(name):
     name = re.sub(r"[^\w\s]", "", name)   # remove punctuation
     name = re.sub(r"\s+", " ", name)      # collapse extra spaces
     return name
+
+
+# Build a set of stocked waterbody names for fast lookup when scoring spots.
+def build_stocked_name_set(stocking_df):
+    stocked_names = set()
+
+    for name in stocking_df["waterbody"].dropna():
+        stocked_names.add(normalize_name(name))
+
+    return stocked_names
