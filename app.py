@@ -28,9 +28,23 @@ st.info(f"{selected_spot} | {lat}, {lon}")
 weather_df = fetch_weather(lat, lon)
 weather_df["score"] = weather_df.apply(score_hour, axis=1)
 
-st.subheader("🏆 Best Spots Right Now")
 ranked = rank_spots()
-st.dataframe(ranked)
+
+# Top recommendation card
+best = ranked.iloc[0]  # first row = highest scored spot
+
+st.subheader("🎣 Best Spot Right Now")
+st.success(f"""
+**{best['spot']}**  
+Best time to go: {best['best_time']}  
+Conditions score: {best['best_score']}/100  
+Water temp: {best['temp_f']}°F  
+Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
+""")
+
+# Full ranked table below
+st.subheader("🏆 All Spots Ranked")
+st.dataframe(ranked, use_container_width=True)
 
 stocking_df = fetch_stocking_data()
 st.subheader("🐟 This Week's Stocking Report")
