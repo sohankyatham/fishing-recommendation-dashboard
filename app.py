@@ -4,6 +4,7 @@ from data.weather import fetch_weather
 from data.spots import SPOTS
 from analysis.scoring import score_hour
 from analysis.ranker import rank_spots
+from data.stocking import fetch_stocking_data
 
 st.set_page_config(page_title="Fishing Conditions Dashboard", page_icon="🐠", layout="wide")
 st.title("🐠 Fishing Conditions Dashboard")
@@ -30,6 +31,10 @@ weather_df["score"] = weather_df.apply(score_hour, axis=1)
 st.subheader("🏆 Best Spots Right Now")
 ranked = rank_spots()
 st.dataframe(ranked)
+
+stocking_df = fetch_stocking_data()
+st.subheader("🐟 This Week's Stocking Report")
+st.dataframe(stocking_df)
 
 if show_details:
     st.subheader("Raw Weather Data")

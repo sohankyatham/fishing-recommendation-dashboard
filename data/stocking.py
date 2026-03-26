@@ -1,0 +1,41 @@
+# data/stocking.py
+import requests
+import pdfplumber
+import pandas as pd
+import io
+
+# Fetch the weekly trout stocking report from Georgia DNR.
+def fetch_stocking_data():
+    url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf"
+
+    response = requests.get(url)
+
+    # io.BytesIO wraps the raw bytes so pdfplumber can read it
+    # without saving the file to disk first
+    pdf_file = io.BytesIO(response.content)
+
+    rows = []
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text()
+            lines = text.split("\n")
+
+            for line in lines:
+                # Each data row starts with a date like "3/16/2026"
+                # Skip header lines that don't start with a date
+                parts = line.strip().split()
+                if len(parts) >= 3 and "/" in parts[0]:
+                    date = parts[0]
+                    county = parts[1]
+                    # Waterbody might be multiple words so join the rest
+                    waterbody = " ".join(parts[2:])
+                    rows.append({
+                        "date": date,
+                        "county": county,
+                        "waterbody": waterbody
+                    })
+
+    df = pd.DataFrame(rows)
+    df["date"] = pd.to_datetime(df["date"])
+    return df
