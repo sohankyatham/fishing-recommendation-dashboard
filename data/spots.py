@@ -60,7 +60,7 @@ SPOTS = {
         "lon": -84.09908,
         "pdf_name": None,
     },
-    "Traditions Neighborhood Lake)": {
+    "Traditions Neighborhood Lake": {
         "lat": 34.156,
         "lon": -84.205,
         "pdf_name": None

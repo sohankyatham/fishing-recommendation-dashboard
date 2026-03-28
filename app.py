@@ -9,7 +9,6 @@ from ai.recommendation import generate_fishing_recommendation
 
 st.set_page_config(page_title="Fishing Conditions Dashboard", page_icon="🐠", layout="wide")
 st.title("🐠 Fishing Conditions Dashboard")
-st.set_page_config(layout="wide")
 
 # Sidebar
 st.sidebar.header("Settings")
@@ -24,40 +23,50 @@ time_mode = st.sidebar.radio("Recommendation horizon", ["Today", "Next 3 days"])
 show_details = st.sidebar.toggle("Show details table", value=True)
 
 # Main area
-st.subheader("📍 Selected Spot")
-st.info(f"{selected_spot} | {lat}, {lon}")
+tab1, tab2, tab3 = st.tabs(["🎯 Recommendation", "📊 Rankings", "🐟 Stocking Report"])
 
-weather_df = fetch_weather(lat, lon)
-weather_df["score"] = weather_df.apply(score_hour, axis=1)
 
-with st.spinner("Analyzing fishing conditions..."):
-    ranked = rank_spots()
 
-# Top recommendation card
-best = ranked.iloc[0]  # first row = highest scored spot
+with tab1:
+    st.subheader("📍 Selected Spot")
+    st.info(f"{selected_spot} | {lat}, {lon}")
 
-st.subheader("AI Fishing Recommendation:")
-if st.button("Generate AI Recommendation"):
-    ai_text = generate_fishing_recommendation(best)
-    st.write(ai_text)
+    weather_df = fetch_weather(lat, lon)
+    weather_df["score"] = weather_df.apply(score_hour, axis=1)
 
-st.subheader("🎣 Best Spot Right Now")
-st.success(f"""
-**{best['spot']}**  
-Best time to go: {best['best_time']}  
-Conditions score: {best['best_score']}/100  
-Water temp: {best['temp_f']}°F  
-Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
-""")
+    with st.spinner("Analyzing fishing conditions..."):
+        ranked = rank_spots()
+    # Best recommendation
+    # Metrics
+    # AI recommendation
+    # AI buttons
+    # Top recommendation card
+    best = ranked.iloc[0]  # first row = highest scored spot
 
-# Full ranked table below
-st.subheader("🏆 All Spots Ranked")
-st.dataframe(ranked, use_container_width=True)
+    st.subheader("AI Fishing Recommendation:")
+    if st.button("Generate AI Recommendation"):
+        ai_text = generate_fishing_recommendation(best)
+        st.write(ai_text)
 
-stocking_df = fetch_stocking_data()
-st.subheader("🐟 This Week's Stocking Report")
-st.dataframe(stocking_df)
+    st.subheader("🎣 Best Spot Right Now")
+    st.success(f"""
+    **{best['spot']}**  
+    Best time to go: {best['best_time']}  
+    Conditions score: {best['best_score']}/100  
+    Water temp: {best['temp_f']}°F  
+    Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
+    """)
 
-if show_details:
-    st.subheader("Raw Weather Data")
-    st.dataframe(weather_df)
+    if show_details:
+        st.subheader("Raw Weather Data")
+        st.dataframe(weather_df)
+
+with tab2:
+    # Full ranked table below
+    st.subheader("🏆 All Spots Ranked")
+    st.dataframe(ranked, use_container_width=True)
+
+with tab3:
+    stocking_df = fetch_stocking_data()
+    st.subheader("🐟 This Week's Stocking Report")
+    st.dataframe(stocking_df)

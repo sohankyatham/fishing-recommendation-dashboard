@@ -20,8 +20,8 @@ def get_model():
 
 model = get_model()
 
-@st.cache_resource
 # Create a prompt based on the best spot data and get a fishing recommendation from the AI model
+@st.cache_resource(ttl=1800)
 def generate_fishing_recommendation(best_spot_data):
     prompt = f"""
     You are an informative expert fishing guide in the state of Georgia.

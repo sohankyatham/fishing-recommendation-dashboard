@@ -5,8 +5,8 @@ import pandas as pd
 import io
 import re
 
-@st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
 # Fetch the weekly trout stocking report from Georgia DNR.
+@st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
 def fetch_stocking_data():
     url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf"
 
