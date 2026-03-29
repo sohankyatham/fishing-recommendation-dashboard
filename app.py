@@ -28,8 +28,8 @@ tab1, tab2, tab3 = st.tabs(["🎯 Recommendation", "📊 Rankings", "🐟 Stocki
 
 
 with tab1:
-    st.subheader("📍 Selected Spot")
-    st.info(f"{selected_spot} | {lat}, {lon}")
+    # st.subheader("📍 Selected Spot")
+    # st.info(f"{selected_spot} | {lat}, {lon}")
 
     weather_df = fetch_weather(lat, lon)
     weather_df["score"] = weather_df.apply(score_hour, axis=1)
