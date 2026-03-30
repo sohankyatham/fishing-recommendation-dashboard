@@ -23,24 +23,17 @@ time_mode = st.sidebar.radio("Recommendation horizon", ["Today", "Next 3 days"])
 show_details = st.sidebar.toggle("Show details table", value=True)
 
 # Main area
-tab1, tab2, tab3 = st.tabs(["🎯 Recommendation", "📊 Rankings", "🐟 Stocking Report"])
+tab1, tab2, tab3, tab4 = st.tabs(["🎯 Recommendation", "📍 Selected Spot", "📊 Rankings", "🐟 Stocking Report"])
 
 
-
+# Main page - AI Recommendation, Best Spot
 with tab1:
-    # st.subheader("📍 Selected Spot")
-    # st.info(f"{selected_spot} | {lat}, {lon}")
-
     weather_df = fetch_weather(lat, lon)
     weather_df["score"] = weather_df.apply(score_hour, axis=1)
 
     with st.spinner("Analyzing fishing conditions..."):
         ranked = rank_spots()
-    # Best recommendation
-    # Metrics
-    # AI recommendation
-    # AI buttons
-    # Top recommendation card
+
     best = ranked.iloc[0]  # first row = highest scored spot
 
     st.subheader("AI Fishing Recommendation:")
@@ -57,16 +50,21 @@ with tab1:
     Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
     """)
 
+# Selected Spot Details
+with tab2:
+    st.subheader("📍 Selected Spot")
+    st.info(f"{selected_spot} | {lat}, {lon}")
+
     if show_details:
         st.subheader("Raw Weather Data")
         st.dataframe(weather_df)
 
-with tab2:
+with tab3:
     # Full ranked table below
     st.subheader("🏆 All Spots Ranked")
     st.dataframe(ranked, use_container_width=True)
 
-with tab3:
+with tab4:
     stocking_df = fetch_stocking_data()
     st.subheader("🐟 This Week's Stocking Report")
     st.dataframe(stocking_df)
