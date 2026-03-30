@@ -6,12 +6,15 @@ from analysis.scoring import score_hour
 from analysis.ranker import rank_spots
 from data.stocking import fetch_stocking_data
 from ai.recommendation import generate_fishing_recommendation
+from datetime import datetime, timedelta
+import pytz
 
 st.set_page_config(page_title="Fishing Conditions Dashboard", page_icon="🐠", layout="wide")
 st.title("🐠 Fishing Conditions Dashboard")
 
 # Sidebar
-st.sidebar.header("Settings")
+st.sidebar.header("Settings - Selected Spot")
+now = datetime.now(pytz.timezone("America/New_York"))
 
 selected_spot = st.sidebar.selectbox("Choose a spot", list(SPOTS.keys()))
 st.session_state["selected_spot"] = selected_spot  # save for other pages
@@ -19,8 +22,8 @@ st.session_state["selected_spot"] = selected_spot  # save for other pages
 spot = SPOTS[selected_spot]
 lat, lon = spot["lat"], spot["lon"]
 
-time_mode = st.sidebar.radio("Recommendation horizon", ["Today", "Next 3 days"])
-show_details = st.sidebar.toggle("Show details table", value=True)
+time_mode = st.sidebar.radio("Recommendation horizon", ["Next 24 Hours", "Next 3 days"])
+show_details = st.sidebar.toggle("Show Raw Weather Data", value=True)
 
 # Main area
 tab1, tab2, tab3, tab4 = st.tabs(["🎯 Recommendation", "📍 Selected Spot", "📊 Rankings", "🐟 Stocking Report"])
@@ -57,7 +60,18 @@ with tab2:
 
     if show_details:
         st.subheader("Raw Weather Data")
-        st.dataframe(weather_df)
+        weather_df["time"] = weather_df["time"].dt.tz_localize("America/New_York")
+        if time_mode == "Next 24 Hours":
+            filtered_df = weather_df[
+                (weather_df["time"] > now) &
+                (weather_df["time"] < now + timedelta(hours=24))
+            ]
+        elif time_mode == "Next 3 days":
+            filtered_df = weather_df[
+                (weather_df["time"] > now) &
+                (weather_df["time"] < now + timedelta(hours=72))
+            ]
+        st.dataframe(filtered_df)
 
 # Spots Rankings
 with tab3:
@@ -71,7 +85,7 @@ with tab4:
     st.subheader("🐟 Stocking Report")
 
     # Display last stocking event and when our script fetched it 
-    stocking_df = stocking_df.sort_values("date", ascending=False) # most recent stockings first
+    stocking_df = stocking_df.sort_values("date", ascending=False).reset_index(drop=True) # most recent stockings first
     last_stocked = stocking_df.iloc[0]["date"].strftime("%B %d, %Y")
 
     st.info(f"🗓️ Last stocked: {last_stocked}  |\n\n  🔄 Dashboard last updated: {last_updated}")
