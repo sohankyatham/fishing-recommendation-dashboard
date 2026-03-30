@@ -12,7 +12,7 @@ def rank_spots():
     results = []
 
     # Build stocked name set once to use for all spots
-    stocking_df = fetch_stocking_data()
+    stocking_df, _ = fetch_stocking_data() # second value is fetched_at which is not needed here
     stocked_name_set = build_stocked_name_set(stocking_df)
 
     for spot_name, spot_data in SPOTS.items():

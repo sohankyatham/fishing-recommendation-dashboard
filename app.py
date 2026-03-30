@@ -69,12 +69,10 @@ with tab3:
 with tab4:
     stocking_df, last_updated = fetch_stocking_data()
     st.subheader("🐟 Stocking Report")
-    stocking_df = stocking_df.sort_values("date", ascending=False) # most recent stockings first
-    st.dataframe(stocking_df)
 
     # Display last stocking event and when our script fetched it 
-    stocking_df = stocking_df.sort_values("date", ascending=False)
+    stocking_df = stocking_df.sort_values("date", ascending=False) # most recent stockings first
     last_stocked = stocking_df.iloc[0]["date"].strftime("%B %d, %Y")
 
-    st.info(f"🗓️ Last stocked: {last_stocked}  |  🔄 Dashboard last updated: {last_updated}")
+    st.info(f"🗓️ Last stocked: {last_stocked}  |\n\n  🔄 Dashboard last updated: {last_updated}")
     st.dataframe(stocking_df)
