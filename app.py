@@ -59,12 +59,22 @@ with tab2:
         st.subheader("Raw Weather Data")
         st.dataframe(weather_df)
 
+# Spots Rankings
 with tab3:
     # Full ranked table below
     st.subheader("🏆 All Spots Ranked")
     st.dataframe(ranked, use_container_width=True)
 
+# Stocking Report
 with tab4:
-    stocking_df = fetch_stocking_data()
-    st.subheader("🐟 This Week's Stocking Report")
+    stocking_df, last_updated = fetch_stocking_data()
+    st.subheader("🐟 Stocking Report")
+    stocking_df = stocking_df.sort_values("date", ascending=False) # most recent stockings first
+    st.dataframe(stocking_df)
+
+    # Display last stocking event and when our script fetched it 
+    stocking_df = stocking_df.sort_values("date", ascending=False)
+    last_stocked = stocking_df.iloc[0]["date"].strftime("%B %d, %Y")
+
+    st.info(f"🗓️ Last stocked: {last_stocked}  |  🔄 Dashboard last updated: {last_updated}")
     st.dataframe(stocking_df)

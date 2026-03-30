@@ -4,6 +4,7 @@ import pdfplumber
 import pandas as pd
 import io
 import re
+from datetime import datetime
 
 # Fetch the weekly trout stocking report from Georgia DNR.
 @st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
@@ -40,7 +41,11 @@ def fetch_stocking_data():
 
     df = pd.DataFrame(rows)
     df["date"] = pd.to_datetime(df["date"])
-    return df
+    
+    # When the PDF was last fetched - since PDF updates weekly and program cache's for 1 day
+    fetched_at = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+    
+    return df, fetched_at
 
 
 # Normalize names from Georgia DNR Report to improve matching
