@@ -22,6 +22,13 @@ def score_hour(row):
         score -= 10      
 
     # Time of day (20 points max) - dawn and dusk are the best times to fish
+    if 5 <= hour <= 9 or 17 <= hour <= 20:
+        score += 20   # dawn/dusk
+    elif 10 <= hour <= 16:
+        score += 5    # midday
+    else:
+        score -= 20   # nighttime — not practical for fishing
+
     hour = row["time"].hour  # extract the hour number (0-23) from datetime
     
     # dawn or dusk

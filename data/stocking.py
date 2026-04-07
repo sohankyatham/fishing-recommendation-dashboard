@@ -1,3 +1,7 @@
+'''
+Link to stocking report:
+https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf
+'''
 import streamlit as st
 import requests
 import pdfplumber
