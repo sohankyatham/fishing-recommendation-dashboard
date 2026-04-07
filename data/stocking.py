@@ -2,6 +2,7 @@
 Link to stocking report:
 https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf
 '''
+import pytz
 import streamlit as st
 import requests
 import pdfplumber
@@ -47,7 +48,7 @@ def fetch_stocking_data():
     df["date"] = pd.to_datetime(df["date"])
     
     # When the PDF was last fetched - since PDF updates weekly and program cache's for 1 day
-    fetched_at = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+    fetched_at = datetime.now(pytz.timezone("America/New_York")).strftime("%B %d, %Y at %I:%M %p")
     
     return df, fetched_at
 
