@@ -1,4 +1,7 @@
 # Notes
+
+Filters - parameters for temperatures and pressure
+
 ## TRACK THESE:
 - Trout stocking dates
 - Weather

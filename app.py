@@ -73,6 +73,11 @@ with tab2:
             ]
         st.dataframe(filtered_df)
 
+    # Create line graphs for the Raw Weather Data (Temperature over Time) as well as Pressure over Time
+    st.subheader("Temperature and Pressure Trends")
+    temp_chart = st.line_chart(weather_df.set_index("time")["temperature_f"])
+    pressure_chart = st.line_chart(weather_df.set_index("time")["pressure_change"])
+
 # Spots Rankings
 with tab3:
     # Full ranked table below
