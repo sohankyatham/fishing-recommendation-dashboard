@@ -39,11 +39,6 @@ with tab1:
 
     best = ranked.iloc[0]  # first row = highest scored spot
 
-    st.subheader("AI Fishing Recommendation:")
-    if st.button("Generate AI Recommendation"):
-        ai_text = generate_fishing_recommendation(best)
-        st.write(ai_text)
-
     st.subheader("🎣 Best Spot Right Now")
     st.success(f"""
     **{best['spot']}**  
@@ -52,6 +47,12 @@ with tab1:
     Water temp: {best['temp_f']}°F  
     Pressure trend: {'↓ Dropping (fish feeding)' if best['pressure_change'] < 0 else '↑ Rising (fish lethargic)'}
     """)
+
+    # AI Recommendation Section
+    st.subheader("AI Fishing Recommendation:")
+    if st.button("Click to Generate AI Recommendation"):
+        ai_text = generate_fishing_recommendation(best)
+        st.write(ai_text)
 
 # Selected Spot Details
 with tab2:

@@ -40,8 +40,6 @@ def generate_fishing_recommendation(best_spot_data):
     2. What fish might be active
     3. What bait or lures to use
     4. Where in the water to fish
-
-    Keep the response concise.
     """
 
     # Add timeout protection and prevent infinite loading
