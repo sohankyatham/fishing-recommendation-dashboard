@@ -83,7 +83,19 @@ with tab2:
 with tab3:
     # Full ranked table below
     st.subheader("🏆 All Spots Ranked")
-    st.dataframe(ranked, use_container_width=True)
+
+    ranked_display = ranked.rename(columns={
+    "spot": "Location",
+    "best_score": "Score",
+    "weather_score": "Weather Score",
+    "stocking_bonus": "Stocking Bonus",
+    "stocking_status": "Stocking Status",
+    "stocking_match": "Stocked Waterway",
+    "best_time": "Best Time to Fish",
+    "temp_f": "Temp (°F)",
+    "pressure_change": "Pressure Change"
+    })
+    st.dataframe(ranked_display, use_container_width=True)
 
 # Stocking Report
 with tab4:
