@@ -1,6 +1,6 @@
 '''
 Link to stocking report:
-https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf
+https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly%20Stocking%20Report.pdf
 '''
 import pytz
 import streamlit as st
@@ -14,39 +14,45 @@ from datetime import datetime
 # Fetch the weekly trout stocking report from Georgia DNR.
 @st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
 def fetch_stocking_data():
-    url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf"
+    url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly%20Stocking%20Report.pdf"
 
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
 
-    # io.BytesIO wraps the raw bytes so pdfplumber can read it
-    # without saving the file to disk first
-    pdf_file = io.BytesIO(response.content)
+        # io.BytesIO wraps the raw bytes so pdfplumber can read it
+        # without saving the file to disk first
+        pdf_file = io.BytesIO(response.content)
 
-    rows = []
+        rows = []
 
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text()
-            lines = text.split("\n")
+        with pdfplumber.open(pdf_file) as pdf:
+            for page in pdf.pages:
+                text = page.extract_text()
+                lines = text.split("\n")
 
-            for line in lines:
-                # Each data row starts with a date like "3/16/2026"
-                # Skip header lines that don't start with a date
-                parts = line.strip().split()
-                if len(parts) >= 3 and "/" in parts[0]:
-                    date = parts[0]
-                    county = parts[1]
-                    # Waterbody might be multiple words so join the rest
-                    waterbody = " ".join(parts[2:])
-                    rows.append({
-                        "date": date,
-                        "county": county,
-                        "waterbody": waterbody
-                    })
+                for line in lines:
+                    # Each data row starts with a date like "3/16/2026"
+                    # Skip header lines that don't start with a date
+                    parts = line.strip().split()
+                    if len(parts) >= 3 and "/" in parts[0]:
+                        date = parts[0]
+                        county = parts[1]
+                        # Waterbody might be multiple words so join the rest
+                        waterbody = " ".join(parts[2:])
+                        rows.append({
+                            "date": date,
+                            "county": county,
+                            "waterbody": waterbody
+                        })
 
-    df = pd.DataFrame(rows)
-    df["date"] = pd.to_datetime(df["date"])
+        df = pd.DataFrame(rows)
+        df["date"] = pd.to_datetime(df["date"])
     
+    except Exception as e:
+        # If anything fails, return an empty DataFrame so the app doesn't crash
+        st.warning("⚠️ Could not load stocking report. Stocking data unavailable.")
+        df = pd.DataFrame(columns=["date", "county", "waterbody"])
+
     # When the PDF was last fetched - since PDF updates weekly and program cache's for 1 day
     fetched_at = datetime.now(pytz.timezone("America/New_York")).strftime("%B %d, %Y at %I:%M %p")
     
