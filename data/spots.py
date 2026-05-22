@@ -5,6 +5,12 @@
 # Spots I personally want the app to rank - DO NOT MERGE WITH STOCKING REPORT
 SPOTS = {
     # Key Tailwater Fishing Locations on the Chattahoochee River:
+    "Morrison Lake": {
+        "lat": 34.0553,
+        "lon": -84.3217,
+        "stocking_names_direct": [],
+        "stocking_names_related": []
+    },
     "Jones Bridge Tailwater": {
         "lat": 34.0015,
         "lon": -84.2398,
