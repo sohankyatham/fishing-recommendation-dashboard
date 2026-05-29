@@ -14,9 +14,10 @@
 ## Features
 - Live weather data from Open Meteo API: https://open-meteo.com/
 - Automated PDF parsing of Georgia DNR weekly stocking reports
-- Scoring Model
-- Ranker that combines weather + stocking data
+- Custom Scoring Model based on optimal fishing conditions
+- Spot ranker comparing all locations based on temperature, pressure, & stocking data
 - AI Recommendation via Gemini LLM API
+- Interactive weather charts for selected spots
 
 ## Tech Stack
 - Python
@@ -25,8 +26,23 @@
 - Open-Meteo API
 - pdfplumber
 - Gemini LLM (integrated LLM for recommendations via REST API)
+- altair
 - pytz 
 
 ## How to run locally
+```bash
+# Clone the repo
+git clone https://github.com/sohankyatham/fishing-recommendation-dashboard
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Add your Gemini API key
+# Create a .env file with:
+# GEMINI_API_KEY=your_key_here
+
+# Run the app
+streamlit run app.py
+```
 
 ## Project Structure
