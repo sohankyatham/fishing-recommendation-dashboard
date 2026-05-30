@@ -50,7 +50,7 @@ streamlit run app.py
 
 ## Data Sources
 - **Weather:** [Open-Meteo](https://open-meteo.com/) 
-- **Stocking Reports:** [Georgia DNR Wildlife Resources Division](https://georgiawildlife.com/fishing-forecasts)
+- **Stocking Reports:** [Georgia DNR Wildlife Resources Division - Trout Fishing](https://georgiawildlife.com/Fishing/Trout)
 
 ## Screenshots of app
 ![Selected Spot](assets/screenshot_selected-spot.png)
