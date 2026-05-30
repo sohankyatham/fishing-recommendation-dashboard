@@ -3,25 +3,18 @@ import os
 from google import genai
 from dotenv import load_dotenv
 
-
-# Try Streamlit secrets first (cloud + local)
+# Try Streamlit secrets first (cloud), fallback to .env for local dev
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except:
-    # Fallback to .env for local dev
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
 
-genai.configure(api_key=api_key)
-
-@st.cache_resource
-def get_model():
-    return genai.GenerativeModel("gemini-2.5-flash")
-
-model = get_model()
+# New google-genai client setup
+client = genai.Client(api_key=api_key)
 
 # Create a prompt based on the best spot data and get a fishing recommendation from the AI model
-@st.cache_resource(ttl=1800)
+@st.cache_data(ttl=1800)
 def generate_fishing_recommendation(best_spot_data):
     prompt = f"""
     You are an informative expert fishing guide in the state of Georgia.
@@ -40,11 +33,15 @@ def generate_fishing_recommendation(best_spot_data):
     2. What fish might be active
     3. What bait or lures to use
     4. Where in the water to fish
+
+    Keep the response concise.
     """
 
-    # Add timeout protection and prevent infinite loading
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         return "AI recommendation unavailable right now."
