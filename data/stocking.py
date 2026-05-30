@@ -1,6 +1,6 @@
 '''
 Link to stocking report:
-https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly%20Stocking%20Report.pdf
+https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf
 '''
 import pytz
 import streamlit as st
@@ -14,7 +14,7 @@ from datetime import datetime
 # Fetch the weekly trout stocking report from Georgia DNR.
 @st.cache_data(ttl=86400)  # cache for 1 day - no point to refetch since the PDF updates once a week
 def fetch_stocking_data():
-    url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly%20Stocking%20Report.pdf"
+    url = "https://georgiawildlife.com/sites/default/files/wrd/pdf/trout/Weekly_Stocking_Report.pdf"
 
     try:
         response = requests.get(url)
@@ -50,7 +50,6 @@ def fetch_stocking_data():
     
     except Exception as e:
         # If anything fails, return an empty DataFrame so the app doesn't crash
-        st.warning("⚠️ Could not load stocking report. Stocking data unavailable.")
         df = pd.DataFrame(columns=["date", "county", "waterbody"])
 
     # When the PDF was last fetched - since PDF updates weekly and program cache's for 1 day

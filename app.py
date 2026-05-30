@@ -95,16 +95,30 @@ with tab3:
     "temp_f": "Temp (°F)",
     "pressure_change": "Pressure Change"
     })
-    st.dataframe(ranked_display, use_container_width=True)
+    st.dataframe(ranked_display, width='stretch')
 
+# Stocking Report
 # Stocking Report
 with tab4:
     stocking_df, last_updated = fetch_stocking_data()
     st.subheader("🐟 Stocking Report")
 
-    # Display last stocking event and when our script fetched it 
-    stocking_df = stocking_df.sort_values("date", ascending=False).reset_index(drop=True) # most recent stockings first
-    last_stocked = stocking_df.iloc[0]["date"].strftime("%B %d, %Y")
+    if stocking_df.empty:
+        st.warning("⚠️ Stocking data unavailable right now. Try again later.")
+    else:
+        north_ga_counties = [
+            "Fulton", "Cobb", "Fulton/Cobb", "Cherokee", "Forsyth",
+            "Dawson", "Lumpkin", "White", "Hall", "Gwinnett"
+        ]
+        stocking_df = stocking_df[
+            stocking_df["county"].str.contains(
+                "|".join(north_ga_counties), case=False, na=False
+            )
+        ]
 
-    st.info(f"🗓️ Last stocked: {last_stocked}  |\n\n  🔄 Dashboard last updated: {last_updated}")
-    st.dataframe(stocking_df)
+        stocking_df = stocking_df.sort_values("date", ascending=False).reset_index(drop=True)
+        last_stocked = stocking_df.iloc[0]["date"].strftime("%B %d, %Y")
+        stocking_df["Days Ago"] = (datetime.now(pytz.timezone("America/New_York")) - stocking_df["date"].dt.tz_localize("America/New_York")).dt.days
+
+        st.info(f"🗓️ Last stocked: {last_stocked}  |  🔄 Dashboard last updated: {last_updated}")
+        st.dataframe(stocking_df)
